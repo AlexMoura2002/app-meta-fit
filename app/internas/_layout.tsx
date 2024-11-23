@@ -14,8 +14,8 @@ export default function Layout() {
             }}
         >
             <Tabs.Screen name="tasks" options={{
-                headerTitle: "Tarefas",
-                tabBarLabel: "Tarefas",
+                headerTitle: "Início",
+                tabBarLabel: "Início",
                 tabBarIcon: ({color}) => (
                     <MaterialCommunityIcons name = "check-circle-outline" color={color} size={32}/>
                 )
@@ -31,7 +31,7 @@ export default function Layout() {
                 headerTitle: "Sobre o aplicativo",
                 tabBarLabel: "Sobre o App",
                 tabBarIcon: ({color}) => (
-                    <MaterialCommunityIcons name = "information-outline" color={color} size={32}/>
+                    <MaterialCommunityIcons name = "account" color={color} size={32}/>
                 )
             }} />
         </Tabs>

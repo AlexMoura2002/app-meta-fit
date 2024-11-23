@@ -4,13 +4,13 @@ export default function Dashboard() {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.greeting}>Bem-vindo(a), Alex!</Text>
-                <Text style={styles.motivation}>Continue se superando!</Text>
                 {/* Avatar */} 
                 <Image 
-                    source={{ uri: 'https://via.placeholder.com/50' }} // Substitua pelo link da sua imagem
-                    style={styles.avatar}
-                />
+                        source={require('../../assets/images/boy.png')} // Caminho para a imagem baixada
+                        style={styles.cardIcon} // Ajuste o estilo para melhorar a exibição
+                    />
+                <Text style={styles.greeting}>Bem-vindo(a), Alex!</Text>
+                <Text style={styles.motivation}>Continue se superando!</Text>
             </View>
 
             <View style={styles.menu}>
@@ -24,17 +24,17 @@ export default function Dashboard() {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.card} onPress={() => alert("Ir para a dieta")}>
-                    <Image 
-                        source={{ uri: 'https://via.placeholder.com/30.png' }} // Ícone de comida saudável
-                        style={styles.cardIcon}
+                <Image 
+                        source={require('../../assets/images/healthy-heart.png')} // Caminho para a imagem baixada
+                        style={styles.cardIcon} // Ajuste o estilo para melhorar a exibição
                     />
                     <Text style={styles.cardText}>Minha Dieta</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.card} onPress={() => alert("Ir para configurações")}>
-                    <Image 
-                        source={{ uri: 'https://via.placeholder.com/30.png' }} // Ícone de configurações
-                        style={styles.cardIcon}
+                <Image 
+                        source={require('../../assets/images/setting.png')} // Caminho para a imagem baixada
+                        style={styles.cardIcon} // Ajuste o estilo para melhorar a exibição
                     />
                     <Text style={styles.cardText}>Configurações</Text>
                 </TouchableOpacity>
@@ -50,20 +50,19 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: 'center', // Centraliza todos os itens no eixo horizontal
         marginBottom: 20,
     },
     greeting: {
         fontSize: 20,
         fontWeight: 'bold',
         color: '#333',
+        marginTop: 10, // Espaço entre o avatar e o texto
     },
     motivation: {
         fontSize: 14,
         color: '#777',
-        marginTop: 5,
+        marginTop: 5, // Espaço entre os textos
     },
     avatar: {
         width: 50,
@@ -87,8 +86,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     cardIcon: {
-        width: 50, // Reduzir o tamanho da imagem para 70x70 pixels
-        height: 30, // Reduzido de 100 para 70
+        width: 50, // Tamanho ajustado da imagem
+        height: 35,
         marginBottom: 10,
         resizeMode: 'contain', // Manter a imagem proporcional
     },
