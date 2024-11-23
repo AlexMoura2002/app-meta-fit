@@ -17,21 +17,21 @@ export default function Layout() {
                 headerTitle: "Início",
                 tabBarLabel: "Início",
                 tabBarIcon: ({color}) => (
-                    <MaterialCommunityIcons name = "check-circle-outline" color={color} size={32}/>
+                    <MaterialCommunityIcons name = "home" color={color} size={32}/>
                 )
             }} />
             <Tabs.Screen name="user" options={{
                 headerTitle: "Meus treinos",
                 tabBarLabel: "Meus treinos",
                 tabBarIcon: ({color}) => (
-                    <MaterialCommunityIcons name = "account" color={color} size={32}/>
+                    <MaterialCommunityIcons name = "dumbbell" color={color} size={32}/>
                 )
             }} />
             <Tabs.Screen name="about" options={{
-                headerTitle: "Sobre o aplicativo",
-                tabBarLabel: "Sobre o App",
+                headerTitle: "Configurações",
+                tabBarLabel: "Configurações",
                 tabBarIcon: ({color}) => (
-                    <MaterialCommunityIcons name = "account" color={color} size={32}/>
+                    <MaterialCommunityIcons name = "cog" color={color} size={32}/>
                 )
             }} />
         </Tabs>
