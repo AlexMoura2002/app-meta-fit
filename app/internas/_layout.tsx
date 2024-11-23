@@ -21,8 +21,8 @@ export default function Layout() {
                 )
             }} />
             <Tabs.Screen name="user" options={{
-                headerTitle: "Dados do Usuário",
-                tabBarLabel: "Dados Usuário",
+                headerTitle: "Meus treinos",
+                tabBarLabel: "Meus treinos",
                 tabBarIcon: ({color}) => (
                     <MaterialCommunityIcons name = "account" color={color} size={32}/>
                 )

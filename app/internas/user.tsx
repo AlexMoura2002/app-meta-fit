@@ -179,7 +179,6 @@ export default function User() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>Dados do Usuário</Text>
 
             {/* Menu de intervalos de meses */}
             <View style={styles.menu}>
@@ -246,6 +245,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         marginBottom: 15,
+        marginTop: 40,
     },
     menuButton: {
         flex: 1,
