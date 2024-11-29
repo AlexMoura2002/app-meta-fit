@@ -72,45 +72,58 @@ const WorkoutPlanner = () => {
 
   const salvarExercicio = async () => {
     const { nome, series, observacao, dia } = currentWorkout;
-
+  
     if (!nome || !series) {
       alert("Preencha os campos obrigatórios!");
       return;
     }
-
+  
     try {
       if (!userId) {
         alert("Usuário não autenticado!");
         return;
       }
-
+  
       const workoutsRef = ref(db, `workouts/${userId}/${activeWeek}/${dia}`);
-
+  
       if (editMode) {
-        // Atualizar exercício
+        // Atualizar exercício existente
         const exerciseRef = ref(db, `workouts/${userId}/${activeWeek}/${dia}/${currentWorkout.id}`);
-        await set(exerciseRef, { nome, series, observacao, dia, week: activeWeek });
+        await set(exerciseRef, { nome, series, observacao, dia, week: activeWeek, id: currentWorkout.id });
         alert("Exercício atualizado!");
       } else {
-        // Adicionar novo exercício
-        const newWorkoutRef = push(workoutsRef);
-        await set(newWorkoutRef, { nome, series, observacao, dia, week: activeWeek });
+        // Adicionar novo exercício com ID gerado automaticamente pelo push()
+        const newWorkoutRef = push(workoutsRef);  // Gera o ID automaticamente
+        const newWorkoutId = newWorkoutRef.key;  // A chave gerada
+        await set(newWorkoutRef, { nome, series, observacao, dia, week: activeWeek, id: newWorkoutId });
         alert("Exercício salvo!");
       }
-
+  
       setModalVisible(false);
       fetchWorkouts(); // Atualizar lista de exercícios
     } catch (error) {
       alert("Erro ao salvar o exercício: " + error.message);
     }
   };
-
+  
   const excluirExercicio = async (dia, workout) => {
     try {
+      // Certifique-se de que o ID do exercício existe (se está sendo passado corretamente)
+      if (!workout.id) {
+        alert("ID do exercício não encontrado!");
+        return;
+      }
+  
+      // A referência precisa ser para o nó do exercício específico que queremos excluir
       const workoutRef = ref(db, `workouts/${userId}/${activeWeek}/${dia}/${workout.id}`);
+      
+      // Remover o exercício
       await remove(workoutRef);
+  
       alert("Exercício excluído!");
-      fetchWorkouts(); // Atualizar lista
+  
+      // Recarregar os exercícios para garantir que a UI seja atualizada
+      fetchWorkouts(); 
     } catch (error) {
       alert("Erro ao excluir exercício: " + error.message);
     }

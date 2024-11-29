@@ -1,6 +1,8 @@
 import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function Dashboard() {
+    const router = useRouter();
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -15,7 +17,7 @@ export default function Dashboard() {
 
             <View style={styles.menu}>
                 {/* Card com Peso de Academia */}
-                <TouchableOpacity style={styles.card} onPress={() => alert("Ir para os treinos")}>
+                <TouchableOpacity style={styles.card} onPress={() => router.push(`/internas/user`)}>
                     <Image 
                         source={require('../../assets/images/dumbbell.png')} // Caminho para a imagem baixada
                         style={styles.cardIcon} // Ajuste o estilo para melhorar a exibição
