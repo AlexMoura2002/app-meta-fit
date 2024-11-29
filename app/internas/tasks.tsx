@@ -33,7 +33,7 @@ export default function Dashboard() {
                     <Text style={styles.cardText}>Minha Dieta</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.card} onPress={() => alert("Ir para configurações")}>
+                <TouchableOpacity style={styles.card} onPress={() => router.push(`/internas/about`)}>
                 <Image 
                         source={require('../../assets/images/setting.png')} // Caminho para a imagem baixada
                         style={styles.cardIcon} // Ajuste o estilo para melhorar a exibição
