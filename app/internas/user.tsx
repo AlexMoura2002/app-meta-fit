@@ -1,9 +1,24 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Modal, TextInput, StyleSheet, FlatList, Dimensions } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+  StyleSheet,
+  FlatList,
+  Dimensions,
+} from "react-native";
+import { getAuth } from "firebase/auth";
+import { ref, set, push, get, child, remove } from "firebase/database";
+import { db } from "../../scripts/firebase-config";
 
 const { width, height } = Dimensions.get("window");
 
 const WorkoutPlanner = () => {
+  const auth = getAuth();
+  const userId = auth.currentUser?.uid; // ID do usuário autenticado
+
   const [activeWeek, setActiveWeek] = useState(0);
   const [activeDay, setActiveDay] = useState(0);
   const [workouts, setWorkouts] = useState({});
@@ -14,40 +29,95 @@ const WorkoutPlanner = () => {
   const semanas = ["Semana 1", "Semana 2", "Semana 3", "Semana 4"];
   const dias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
+  const fetchWorkouts = async () => {
+    try {
+      if (!userId) {
+        alert("Usuário não autenticado!");
+        return;
+      }
+
+      const workoutsRef = ref(db, `workouts/${userId}`);
+      const snapshot = await get(workoutsRef);
+
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+
+        // Reorganizar dados para o formato necessário
+        const workoutsData = {};
+        for (const week in data) {
+          if (!workoutsData[week]) workoutsData[week] = {};
+          for (const day in data[week]) {
+            workoutsData[week][day] = Object.values(data[week][day]); // Convertendo para array
+          }
+        }
+        setWorkouts(workoutsData);
+      } else {
+        console.log("Nenhum dado encontrado.");
+        setWorkouts({});
+      }
+    } catch (error) {
+      alert("Erro ao carregar exercícios: " + error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchWorkouts(); // Carregar exercícios ao montar o componente
+  }, []);
+
   const abrirModal = (workout = null, dia = activeDay) => {
     setEditMode(!!workout);
     setCurrentWorkout(workout || { nome: "", series: "", observacao: "", dia });
     setModalVisible(true);
   };
 
-  const salvarExercicio = () => {
+  const salvarExercicio = async () => {
     const { nome, series, observacao, dia } = currentWorkout;
-    if (!nome || !series) return alert("Preencha os campos obrigatórios!");
 
-    const updatedWorkouts = { ...workouts };
-    if (!updatedWorkouts[activeWeek]) updatedWorkouts[activeWeek] = {};
-    if (!updatedWorkouts[activeWeek][dia]) updatedWorkouts[activeWeek][dia] = [];
-
-    if (editMode) {
-      const index = updatedWorkouts[activeWeek][dia].findIndex((w) => w === currentWorkout);
-      updatedWorkouts[activeWeek][dia][index] = { nome, series, observacao, dia };
-    } else {
-      updatedWorkouts[activeWeek][dia].push({ nome, series, observacao, dia });
+    if (!nome || !series) {
+      alert("Preencha os campos obrigatórios!");
+      return;
     }
 
-    setWorkouts(updatedWorkouts);
-    setModalVisible(false);
+    try {
+      if (!userId) {
+        alert("Usuário não autenticado!");
+        return;
+      }
+
+      const workoutsRef = ref(db, `workouts/${userId}/${activeWeek}/${dia}`);
+
+      if (editMode) {
+        // Atualizar exercício
+        const exerciseRef = ref(db, `workouts/${userId}/${activeWeek}/${dia}/${currentWorkout.id}`);
+        await set(exerciseRef, { nome, series, observacao, dia, week: activeWeek });
+        alert("Exercício atualizado!");
+      } else {
+        // Adicionar novo exercício
+        const newWorkoutRef = push(workoutsRef);
+        await set(newWorkoutRef, { nome, series, observacao, dia, week: activeWeek });
+        alert("Exercício salvo!");
+      }
+
+      setModalVisible(false);
+      fetchWorkouts(); // Atualizar lista de exercícios
+    } catch (error) {
+      alert("Erro ao salvar o exercício: " + error.message);
+    }
   };
 
-  const excluirExercicio = (dia, workout) => {
-    const updatedWorkouts = { ...workouts };
-    updatedWorkouts[activeWeek][dia] = updatedWorkouts[activeWeek][dia].filter((w) => w !== workout);
-    setWorkouts(updatedWorkouts);
+  const excluirExercicio = async (dia, workout) => {
+    try {
+      const workoutRef = ref(db, `workouts/${userId}/${activeWeek}/${dia}/${workout.id}`);
+      await remove(workoutRef);
+      alert("Exercício excluído!");
+      fetchWorkouts(); // Atualizar lista
+    } catch (error) {
+      alert("Erro ao excluir exercício: " + error.message);
+    }
   };
 
   return (
     <View style={styles.container}>
-      {/* Seletor de semanas */}
       <View style={styles.weeks}>
         {semanas.map((semana, index) => (
           <TouchableOpacity
@@ -62,7 +132,6 @@ const WorkoutPlanner = () => {
         ))}
       </View>
 
-      {/* Seletor de dias */}
       <View style={styles.days}>
         {dias.map((dia, index) => (
           <TouchableOpacity
@@ -77,10 +146,9 @@ const WorkoutPlanner = () => {
         ))}
       </View>
 
-      {/* Lista de exercícios */}
       <FlatList
         data={workouts[activeWeek]?.[activeDay] || []}
-        keyExtractor={(_, index) => index.toString()}
+        keyExtractor={(item) => item.id}
         ListEmptyComponent={<Text style={styles.emptyText}>Nenhum exercício adicionado.</Text>}
         renderItem={({ item }) => (
           <View style={styles.workoutItem}>
@@ -101,12 +169,10 @@ const WorkoutPlanner = () => {
         )}
       />
 
-      {/* Botão para adicionar exercícios */}
       <TouchableOpacity style={styles.addButton} onPress={() => abrirModal()}>
         <Text style={styles.addButtonText}>Adicionar Exercício</Text>
       </TouchableOpacity>
 
-      {/* Modal para adicionar/editar exercícios */}
       <Modal visible={modalVisible} animationType="slide" transparent>
         <View style={styles.modalContainer}>
           <Text style={styles.modalTitle}>{editMode ? "Editar Exercício" : "Adicionar Exercício"}</Text>
