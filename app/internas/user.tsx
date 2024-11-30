@@ -212,7 +212,7 @@ const WorkoutPlanner = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 15, backgroundColor: "#1E293B" },
+  container: { flex: 1, padding: 15, backgroundColor: "#fff" },
   weeks: { flexDirection: "row", justifyContent: "space-between", marginBottom: 10 },
   weekButton: { flex: 1, margin: 3, padding: 12, backgroundColor: "#3B82F6", borderRadius: 5 },
   weekButtonActive: { backgroundColor: "#3B82F6" },
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
   workoutActions: { flexDirection: "row", alignItems: "center" },
   editButton: { backgroundColor: "#007bff", padding: 8, borderRadius: 5, marginRight: 5 },
   deleteButton: { backgroundColor: "#dc3545", padding: 8, borderRadius: 5 },
-  addButton: { padding: 15, backgroundColor: "#28a745", borderRadius: 5, alignItems: "center", marginTop: 20 },
+  addButton: { padding: 15, backgroundColor: "#3B82F6", borderRadius: 5, alignItems: "center", marginTop: 20 },
   addButtonText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
   modalContainer: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.5)" },
   modalTitle: { fontSize: 20, color: "#fff", marginBottom: 20 },

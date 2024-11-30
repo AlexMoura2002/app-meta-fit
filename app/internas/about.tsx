@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
         flexGrow: 1, // Garantir que o conteúdo ocupe o espaço restante
         alignItems: 'center',
         justifyContent: 'flex-start', // Alinhar ao topo para evitar corte
-        backgroundColor: '#1E293B', // Cor de fundo consistente com o resto do app
+        backgroundColor: '#fff', // Cor de fundo consistente com o resto do app
     },
     title: {
         fontSize: 24,
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     },
     optionButton: {
         padding: 15,
-        backgroundColor: '#ffffff',
+        backgroundColor: '000',
         marginBottom: 10,
         borderRadius: 8,
         borderWidth: 1,
@@ -84,11 +84,11 @@ const styles = StyleSheet.create({
     },
     optionText: {
         fontSize: 16,
-        color: '#333',
+        color: '#000',
     },
     description: {
         fontSize: 16,
-        color: '#fff',
+        color: '#000',
         textAlign: 'center',
         marginBottom: 30,
     },

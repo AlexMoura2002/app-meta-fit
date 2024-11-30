@@ -50,7 +50,7 @@ export default function Dashboard() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#1E293B', // Azul escuro para o fundo
+        backgroundColor: '#fff', // Azul escuro para o fundo
         padding: 20,
     },
     header: {
@@ -60,12 +60,12 @@ const styles = StyleSheet.create({
     greeting: {
         fontSize: 22,
         fontWeight: 'bold',
-        color: '#FFFFFF', // Texto branco
+        color: '#000', // Texto branco
         marginTop: 10,
     },
     motivation: {
         fontSize: 16,
-        color: '#CBD5E1', // Cinza claro
+        color: '#000', // Cinza claro
         marginTop: 5,
     },
     menu: {
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     cardText: {
-        color: '#FFFFFF', // Texto branco
+        color: '#fff', // Texto branco
         fontSize: 18,
         fontWeight: 'bold',
     },
