@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { auth } from '../scripts/firebase-config';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -7,74 +7,64 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 export default function Index() {
     const router = useRouter();
     const [email, setEmail] = useState("");
-    const [nome, setNome] = useState("");
     const [password, setPassword] = useState("");
     const [errorLogin, setErrorLogin] = useState("");
 
     const validarCampos = () => {
-        if (email == "") {
-            setErrorLogin("Informe seu email");
-        } else if (password == "") {
-            setErrorLogin("Informe sua senha");
+        if (email === "") {
+            setErrorLogin("Por favor, informe seu email.");
+        } else if (password === "") {
+            setErrorLogin("Por favor, informe sua senha.");
         } else {
             setErrorLogin("");
             login();
         }
-    }
+    };
 
     const login = () => {
         signInWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-
-    // Signed in 
-    const user = userCredential.user;
-    setEmail("");
-    setPassword("");
-    setErrorLogin("");
-    router.push("/internas/tasks");
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    setErrorLogin(errorMessage);
-  });
-
-    }
+            .then(() => {
+                setEmail("");
+                setPassword("");
+                setErrorLogin("");
+                router.push("/internas/tasks");
+            })
+            .catch(() => {
+                setErrorLogin("Email ou senha incorretos. Tente novamente.");
+            });
+    };
 
     return (
         <View style={styles.container}>
-            <Image style={styles.logo} source={require('../assets/images/app-meta-fit.png')} />
+            <Image style={styles.logo} source={require('../assets/images/novalogo.png')} />
 
-            {errorLogin != null && (
+            {errorLogin !== "" && (
                 <Text style={styles.alert}>{errorLogin}</Text>
             )}
 
             <TextInput
                 style={styles.input}
-                placeholder='E-mail'
+                placeholder="Digite seu e-mail"
+                placeholderTextColor="#B0BEC5"
                 value={email}
                 onChangeText={setEmail}
             />
 
             <TextInput
                 style={styles.input}
-                placeholder='Senha'
+                placeholder="Digite sua senha"
+                placeholderTextColor="#B0BEC5"
                 secureTextEntry={true}
                 value={password}
                 onChangeText={setPassword}
             />
 
-            <TouchableOpacity style={styles.button}
-                onPress={validarCampos}
-            >
+            <TouchableOpacity style={styles.button} onPress={validarCampos}>
                 <Text style={styles.textButton}>Entrar</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-                style={styles.buttonCreate}
-                onPress={() => router.push('/user_create')}
-            >
-                <Text style={styles.buttonCreateText}>Criar Usuário</Text>
+            <TouchableOpacity style={styles.buttonCreate} onPress={() => router.push('/user_create')}>
+                <Text style={styles.buttonCreateText}>Criar Conta</Text>
             </TouchableOpacity>
         </View>
     );
@@ -82,56 +72,61 @@ export default function Index() {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#B0BEC5",
-        padding: 30,
         flex: 1,
+        backgroundColor: "#1E293B", // Azul escuro moderno
         alignItems: 'center',
         justifyContent: 'center',
-        width: '100%'
+        padding: 20,
     },
     logo: {
-        width: 250, // Reduz a largura da logo (ajuste conforme necessário)
-        height: 200, // Reduz a altura da logo (ajuste conforme necessário)
-        marginBottom: 5, // Reduz a distância entre a logo e o campo de email
-        marginTop: -10, // Ajusta a posição para cima, diminuindo o espaço em relação ao topo
+        width: 220,
+        height: 180,
+        marginBottom: 30,
     },
     alert: {
-        fontSize: 18,
-        color: '#ECEFF1',
+        fontSize: 16,
+        color: "#FF7043", // Laranja vibrante para chamar atenção
         textAlign: 'center',
         marginBottom: 20,
+        paddingHorizontal: 10,
     },
     input: {
-        fontSize: 18,
-        borderRadius: 10,
-        backgroundColor: '#ECEFF1',
-        padding: 20,
-        marginBottom: 20,
-        width: '100%'
+        width: '100%',
+        backgroundColor: "#374151", // Azul acinzentado para contraste moderno
+        color: "#FFFFFF", // Texto branco
+        borderRadius: 8,
+        padding: 15,
+        marginBottom: 15,
+        fontSize: 16,
     },
     button: {
-        backgroundColor: '#FF7043',
-        padding: 10,
-        borderRadius: 10,
-        marginBottom: 20,
-        width: '100%'
+        width: '100%',
+        backgroundColor: "#FF7043", // Laranja vibrante
+        padding: 15,
+        borderRadius: 8,
+        alignItems: 'center',
+        marginBottom: 15,
     },
     textButton: {
-        fontSize: 24,
-        textAlign: 'center',
-        color: '#000'
+        fontSize: 18,
+        color: "#FFFFFF", // Branco para contraste
+        fontWeight: 'bold',
     },
     buttonCreate: {
-        padding: 10,
-        borderWidth: 1,
-        borderColor: '#000',
-        borderRadius: 10,
-        marginBottom: 20,
-        width: '100%'
+        width: '100%',
+        backgroundColor: "#4F83CC", // Azul vibrante para destaque
+        padding: 15,
+        borderRadius: 50, // Bordas arredondadas modernas
+        alignItems: 'center',
+        shadowColor: "#000", // Sombra sutil
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        elevation: 5, // Para Android
     },
     buttonCreateText: {
         fontSize: 18,
-        textAlign: 'center',
-        color: '#000'
-    }
-})
+        color: "#FFFFFF", // Branco para contraste
+        fontWeight: 'bold',
+    },
+});
