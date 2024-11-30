@@ -18,12 +18,11 @@ export default function About() {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-
-<Text style={styles.description}>
+            <Text style={styles.description}>
                 O Meta-Fit é um aplicativo criado para ajudar você a organizar seus treinos e sua dieta, 
                 facilitando a evolução no mundo fitness. Alcance seus objetivos com praticidade e foco!
             </Text>
-            
+
             {/* Opções de Configuração */}
             <View style={styles.optionsContainer}>
                 <TouchableOpacity style={styles.optionButton} onPress={() => router.push("/meus-dados")}>
@@ -47,9 +46,6 @@ export default function About() {
                 </TouchableOpacity>
             </View>
 
-            {/* Descrição do App */}
-            
-            
             {/* Botão de Logout */}
             <TouchableOpacity style={styles.logoutButton} onPress={logout}>
                 <Text style={styles.logoutText}>Sair</Text>
@@ -64,7 +60,7 @@ const styles = StyleSheet.create({
         flexGrow: 1, // Garantir que o conteúdo ocupe o espaço restante
         alignItems: 'center',
         justifyContent: 'flex-start', // Alinhar ao topo para evitar corte
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#1E293B', // Cor de fundo consistente com o resto do app
     },
     title: {
         fontSize: 24,
@@ -92,7 +88,7 @@ const styles = StyleSheet.create({
     },
     description: {
         fontSize: 16,
-        color: '#666',
+        color: '#fff',
         textAlign: 'center',
         marginBottom: 30,
     },
@@ -100,7 +96,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         padding: 15,
         borderRadius: 10,
-        backgroundColor: '#e74c3c',
+        backgroundColor: '#009688', // Cor consistente com o tema principal
         alignItems: 'center',
         justifyContent: 'center',
     },

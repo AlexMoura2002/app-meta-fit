@@ -17,7 +17,7 @@ const { width, height } = Dimensions.get("window");
 
 const WorkoutPlanner = () => {
   const auth = getAuth();
-  const userId = auth.currentUser?.uid; // ID do usuário autenticado
+  const userId = auth.currentUser?.uid;
 
   const [activeWeek, setActiveWeek] = useState(0);
   const [activeDay, setActiveDay] = useState(0);
@@ -41,13 +41,11 @@ const WorkoutPlanner = () => {
 
       if (snapshot.exists()) {
         const data = snapshot.val();
-
-        // Reorganizar dados para o formato necessário
         const workoutsData = {};
         for (const week in data) {
           if (!workoutsData[week]) workoutsData[week] = {};
           for (const day in data[week]) {
-            workoutsData[week][day] = Object.values(data[week][day]); // Convertendo para array
+            workoutsData[week][day] = Object.values(data[week][day]);
           }
         }
         setWorkouts(workoutsData);
@@ -61,7 +59,7 @@ const WorkoutPlanner = () => {
   };
 
   useEffect(() => {
-    fetchWorkouts(); // Carregar exercícios ao montar o componente
+    fetchWorkouts();
   }, []);
 
   const abrirModal = (workout = null, dia = activeDay) => {
@@ -72,58 +70,50 @@ const WorkoutPlanner = () => {
 
   const salvarExercicio = async () => {
     const { nome, series, observacao, dia } = currentWorkout;
-  
+
     if (!nome || !series) {
       alert("Preencha os campos obrigatórios!");
       return;
     }
-  
+
     try {
       if (!userId) {
         alert("Usuário não autenticado!");
         return;
       }
-  
+
       const workoutsRef = ref(db, `workouts/${userId}/${activeWeek}/${dia}`);
-  
+
       if (editMode) {
-        // Atualizar exercício existente
         const exerciseRef = ref(db, `workouts/${userId}/${activeWeek}/${dia}/${currentWorkout.id}`);
         await set(exerciseRef, { nome, series, observacao, dia, week: activeWeek, id: currentWorkout.id });
         alert("Exercício atualizado!");
       } else {
-        // Adicionar novo exercício com ID gerado automaticamente pelo push()
-        const newWorkoutRef = push(workoutsRef);  // Gera o ID automaticamente
-        const newWorkoutId = newWorkoutRef.key;  // A chave gerada
+        const newWorkoutRef = push(workoutsRef);
+        const newWorkoutId = newWorkoutRef.key;
         await set(newWorkoutRef, { nome, series, observacao, dia, week: activeWeek, id: newWorkoutId });
         alert("Exercício salvo!");
       }
-  
+
       setModalVisible(false);
-      fetchWorkouts(); // Atualizar lista de exercícios
+      fetchWorkouts();
     } catch (error) {
       alert("Erro ao salvar o exercício: " + error.message);
     }
   };
-  
+
   const excluirExercicio = async (dia, workout) => {
     try {
-      // Certifique-se de que o ID do exercício existe (se está sendo passado corretamente)
       if (!workout.id) {
         alert("ID do exercício não encontrado!");
         return;
       }
-  
-      // A referência precisa ser para o nó do exercício específico que queremos excluir
+
       const workoutRef = ref(db, `workouts/${userId}/${activeWeek}/${dia}/${workout.id}`);
-      
-      // Remover o exercício
       await remove(workoutRef);
-  
+
       alert("Exercício excluído!");
-  
-      // Recarregar os exercícios para garantir que a UI seja atualizada
-      fetchWorkouts(); 
+      fetchWorkouts();
     } catch (error) {
       alert("Erro ao excluir exercício: " + error.message);
     }
@@ -222,18 +212,18 @@ const WorkoutPlanner = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 15, backgroundColor: "#f9f9f9" },
+  container: { flex: 1, padding: 15, backgroundColor: "#1E293B" },
   weeks: { flexDirection: "row", justifyContent: "space-between", marginBottom: 10 },
-  weekButton: { flex: 1, margin: 3, padding: 10, backgroundColor: "#ddd", borderRadius: 5 },
-  weekButtonActive: { backgroundColor: "#007bff" },
-  weekButtonText: { textAlign: "center", color: "#555", fontSize: 14 },
+  weekButton: { flex: 1, margin: 3, padding: 12, backgroundColor: "#3B82F6", borderRadius: 5 },
+  weekButtonActive: { backgroundColor: "#3B82F6" },
+  weekButtonText: { textAlign: "center", color: "#fff", fontSize: 14 },
   weekButtonTextActive: { color: "#fff" },
   days: { flexDirection: "row", justifyContent: "space-between", marginBottom: 20 },
-  dayButton: { flex: 1, margin: 3, padding: 8, backgroundColor: "#eaeaea", borderRadius: 5 },
-  dayButtonActive: { backgroundColor: "#007bff" },
-  dayButtonText: { textAlign: "center", color: "#555", fontSize: 13 },
-  dayButtonTextActive: { color: "#fff" },
-  workoutItem: { flexDirection: "row", justifyContent: "space-between", padding: 12, backgroundColor: "#fff", marginVertical: 5, borderRadius: 8 },
+  dayButton: { flex: 1, margin: 3, padding: 8, backgroundColor: "#3B82F6", borderRadius: 5 }, // Alterado para ser consistente
+  dayButtonActive: { backgroundColor: "#007bff" }, // Alterado para cor ativa
+  dayButtonText: { textAlign: "center", color: "#fff", fontSize: 13 },
+  dayButtonTextActive: { color: "#fff" }, // Alterado para texto ativo em branco
+  workoutItem: { flexDirection: "row", justifyContent: "space-between", padding: 12, backgroundColor: "#fff", marginVertical: 5, borderRadius: 8, elevation: 3 },
   workoutText: { flex: 2 },
   workoutName: { fontSize: 16, fontWeight: "bold" },
   workoutDetails: { color: "#555", fontSize: 14 },
